@@ -19,7 +19,7 @@ public class NewsApiController {
 
     @GetMapping({"/news"})
     public NewsResponse getNewsList(@RequestParam(defaultValue = "recent") String function,
-                                   @RequestParam(defaultValue = "all") String category,
+                                   @RequestParam(defaultValue = "") String category,
                                    @RequestParam(defaultValue = "1") int page) {
         return newsService.getNewsByCategory(function, category, page);
     }
