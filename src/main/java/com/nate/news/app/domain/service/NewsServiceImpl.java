@@ -10,6 +10,7 @@ import com.nate.news.app.domain.dto.NewsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
 import java.util.List;
 
 import static com.nate.news.app.common.constants.NewsConstants.BASE_NEWS_URL;
@@ -43,6 +44,16 @@ public class NewsServiceImpl implements NewsService {
             article.setMediaName(Media.getByCode(article.getMedia()) == null ? article.getMedia() : Media.getByCode(article.getMedia()).getName());
             article.setTimeAgo(DateUtil.getTimeAgo(article.getCreateDate()));
         }
+
+        // 이미지 없으면 제거
+        Iterator<Article> iterator = newsResponse.getArticles().iterator();
+        while (iterator.hasNext()) {
+            Article articleVo = iterator.next();
+            if (articleVo.getImageUrl() == null) {
+                iterator.remove(); // null인 imageUrl을 가진 article 삭제
+            }
+        }
+
         return newsResponse;
     }
 }
