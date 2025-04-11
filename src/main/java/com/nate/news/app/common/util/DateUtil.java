@@ -16,7 +16,8 @@ public class DateUtil {
     public static Date parseDate(String dateStr) throws ParseException {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime localDateTime = LocalDateTime.parse(dateStr, formatter);
-        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+        ZoneId koreaZone = ZoneId.of("Asia/Seoul");
+        return Date.from(localDateTime.atZone(koreaZone).toInstant());
     }
 
     // 주어진 날짜 문자열을 "몇일 전", "몇시간 전" 형태로 변환하는 메소드
