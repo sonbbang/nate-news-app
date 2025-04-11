@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequiredArgsConstructor
 public class NewsWebController {
 
-    @GetMapping
+    @GetMapping()
     public String main() {
         return "news";
     }

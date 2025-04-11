@@ -1,6 +1,10 @@
-
+// 전역 변수 설정
 let isRefreshing = false; // 새로고침 여부
 let isLoading = false; // 추가 기사 로드 여부
+let currentPage = 0;
+let hasMoreArticles = true;
+let selectedCategory = '';  // 선택된 카테고리 변수 (빈 문자열은 '전체' 의미)
+let selectedFunction = 'recent';  // 기본값을 'recent'로 설정
 
 // 새로 고침 버튼 클릭 이벤트 처리
 document.getElementById('refresh-btn').addEventListener('click', () => {
@@ -51,17 +55,6 @@ function refreshArticles() {
     hideLoadingIndicator();
     isRefreshing = false;
 }
-
-// 카드를 관찰 대상으로 추가
-function observeCards() {
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => observer.observe(card));
-}
-
-let currentPage = 0;
-let hasMoreArticles = true;
-let selectedCategory = '';  // 선택된 카테고리 변수
-let selectedFunction = '';
 
 function updateCategoryTabs() {
     const categoryTabs = document.querySelectorAll('.category-tab'); // 모든 카테고리 탭 가져오기
@@ -117,7 +110,7 @@ function loadArticlesWithCategory(element) {
     loadArticles(selectedCategory, selectedFunction);  // 모든 기사 로드
 
     // URL에 선택된 카테고리 반영
-    const newUrl = new URL(window.location.href);
+    const newUrl = new URL(window.location.href || '/');
     if (selectedCategory) {
         newUrl.searchParams.set('category', selectedCategory); // 카테고리 반영
     } else {
@@ -126,7 +119,6 @@ function loadArticlesWithCategory(element) {
 
     history.pushState(null, '', newUrl.toString());  // 브라우저 히스토리 업데이트
 }
-
 
 
 // Function 선택 시 Ajax 요청과 함께 선택된 Function 전달
@@ -153,7 +145,7 @@ function loadArticlesWithFunction(element) {
 
     loadArticles(selectedCategory, selectedFunction);  // 모든 기사 로드
 
-    const newUrl = new URL(window.location.href);
+    const newUrl = new URL(window.location.href || '/');
 
     if (selectedFunction) {
         newUrl.searchParams.set('function', selectedFunction);
@@ -166,13 +158,10 @@ function loadArticlesWithFunction(element) {
 
 // Function to load more articles
 function loadArticles(selectedCategory = '', selectedFunction = '', isRefresh = false) {
-    console.log('loadArticles.isRefresh: ' + isRefresh)
-
     if (isLoading || !hasMoreArticles) return; // 중복 실행 방지
 
     isLoading = true;
     document.getElementById('loading').style.display = 'block'; // Show loading indicator
-
 
     let fetchUrl = `/api/v1/news?page=${currentPage + 1}`;
 
@@ -212,8 +201,8 @@ function loadArticles(selectedCategory = '', selectedFunction = '', isRefresh = 
                                     <!--p>${article.snippet}</p-->
                                 </div>
                             </a>
-                            <span class="article-source">${ article.mediaName }</span> ·
-                            <span class="article-date">${ article.timeAgo }</span>
+                            <span class="article-source">${article.mediaName}</span> ·
+                            <span class="article-date">${article.timeAgo}</span>
                             <span class="like-btn" onclick="toggleLike(this)"></span> <!-- 하트 아이콘 -->
                         `;
 
@@ -234,7 +223,6 @@ function loadArticles(selectedCategory = '', selectedFunction = '', isRefresh = 
                     }
                 });
 
-                observeCards(); // 새로 로드된 카드도 관찰
                 observeTriggerArticle(); // 마지막에서 세 번째 기사 감지
                 currentPage++;  // Increment current page after loading
             } else {
@@ -244,11 +232,10 @@ function loadArticles(selectedCategory = '', selectedFunction = '', isRefresh = 
             isLoading = false;
             document.getElementById('loading').style.display = 'none';
         })
-        .catch(() => {
+        .catch((error) => {
             isLoading = false;
             document.getElementById('loading').style.display = 'none';
             console.error('Failed to load articles:', error); // 상세 에러 로그
-
             alert('Failed to load articles.');
         });
 }
@@ -265,7 +252,6 @@ function observeTriggerArticle() {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 observer.disconnect(); // 중복 호출 방지
-                console.log("observeTriggerArticle");
                 loadArticles(selectedCategory, selectedFunction,);
             }
         });
@@ -298,7 +284,6 @@ window.addEventListener('scroll', debounce(() => {
     }
 }, 200));
 
-
 document.addEventListener('DOMContentLoaded', () => {
     setupTopButton();
 
@@ -310,7 +295,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const newsContainerParent = document.querySelector("#news-container")?.parentNode;
 
     if (newsContainerParent) {
-        observer.observe(newsContainerParent, { childList: true, subtree: true });
+        observer.observe(newsContainerParent, {childList: true, subtree: true});
     }
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -377,7 +362,7 @@ function setupTopButton() {
 
     // 버튼 클릭 시 `#news-container` 내부 스크롤 최상단 이동
     topButton.addEventListener("click", function () {
-        newsContainer.scrollTo({ top: 0, behavior: "smooth" });
+        newsContainer.scrollTo({top: 0, behavior: "smooth"});
 
         // 추가 보정: 완전히 올라가지 않을 경우 대비
         const checkScroll = setInterval(() => {
