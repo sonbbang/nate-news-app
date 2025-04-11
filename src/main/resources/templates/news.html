@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+  <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, proxy-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+
+  <meta charset="UTF-8">
+  <title>Nate News Discover</title>
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f0f0f0" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
+  <!-- CSS 파일 참조 -->
+  <link rel="stylesheet" th:href="@{/css/news.css}">
+</head>
+<body>
+
+<!-- Global Navigation Bar -->
+<div class="gnb">
+  <!-- 카테고리 탭 메뉴 -->
+  <div class="category-menu">
+    <!-- 상위 카테고리 (function) -->
+    <ul class="function">
+      <li class="function-tab">
+        <a href="javascript:void(0);" data-function="recent" onclick="loadArticlesWithFunction(this)">최신</a>
+      </li>
+      <li class="function-tab">
+        <a href="javascript:void(0);" data-function="rank" onclick="loadArticlesWithFunction(this)">랭킹</a>
+      </li>
+    </ul>
+
+    <ul class="category">
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="" onclick="loadArticlesWithCategory(this)">전체</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="pol" onclick="loadArticlesWithCategory(this)">정치</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="eco" onclick="loadArticlesWithCategory(this)">경제</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="soc" onclick="loadArticlesWithCategory(this)">사회</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="int" onclick="loadArticlesWithCategory(this)">세계</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="its" onclick="loadArticlesWithCategory(this)">IT/과학</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="spo" onclick="loadArticlesWithCategory(this)">스포츠</a>
+      </li>
+      <li class="category-tab">
+        <a href="javascript:void(0);" data-category="ent" onclick="loadArticlesWithCategory(this)">연예</a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 새로 고침 버튼 추가 -->
+  <div>
+    <button id="refresh-btn">새로 고침</button>
+  </div>
+
+  <div class="container" id="news-container">
+    <!-- Articles will be inserted here -->
+  </div>
+
+  <!-- Loading indicator -->
+  <div id="loading">Loading more articles...</div>
+  <!-- JavaScript 파일 참조 -->
+  <script th:src="@{/js/news.js}"></script>
+
+</body>
+</html>
