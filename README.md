@@ -128,3 +128,4 @@ GET /api/v1/news
 
 ## 데모 서비스
 https://nate-news-app.onrender.com/
+- 기본적으로 비활성화 상태이므로 초기 요청시 1분 이상 기달려야 할 수 있습니다.
